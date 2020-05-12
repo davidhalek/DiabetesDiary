@@ -4,10 +4,107 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DiabetesDiary"
+        xmlns:converters="clr-namespace:DiabetesDiary"
         mc:Ignorable="d"
-         Title="Dave's Diabetes Diary" Height="750" Width="800">
-    <StackPanel Orientation="Horizontal">
-        <local:DiaryEntryForm/>
-        <Image Source="E:\Projects\DiabetesTracker\DiabetesTracker\diabetes tracker pic.png"/>
-    </StackPanel>
+         Title="Diabetes Diary" Height="900" Width="1200">
+    <Window.Resources>
+        <CollectionViewSource x:Key="EntryLogViewSource"      
+            IsLiveGroupingRequested="True"
+            CollectionViewType="ListCollectionView"/>
+        <local:GlucoseToBackgroundConverter x:Key="converter"/>
+        <Style TargetType="{x:Type Control}" x:Key="baseStyle">
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+        <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource baseStyle}" />
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource baseStyle}" />
+        <Style TargetType="{x:Type UserControl}" BasedOn="{StaticResource baseStyle}" />
+        <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource baseStyle}" />
+        <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource baseStyle}" />
+        <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource baseStyle}" />
+        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource baseStyle}" />
+        <Style TargetType="{x:Type Label}" BasedOn="{StaticResource baseStyle}" />
+        <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource baseStyle}" />
+
+
+    </Window.Resources>
+
+    <Grid HorizontalAlignment="Left">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="270" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="185" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+    <!--<StackPanel Orientation="Horizontal">-->
+    <!--Loaded="DiaryEntryForm_Loaded"/>-->
+        <!--<Image Source="E:\Projects\DiabeesTracker\DiabetesTracker\diabetes tracker pic.png"/>-->
+
+        <!--<StackPanel Orientation="Vertical">-->
+            <!--Name="entryLog"-->
+            <!--AlternatingRowBackground="LightBlue"-->
+            <!--AlternationCount="2"-->
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+            <ListBox x:Name="listBox"  FontWeight="Bold"
+                 HorizontalAlignment="Left" VerticalAlignment="Top" >
+                <ListBoxItem Content="Entry Type"/>
+                <ListBoxItem Content="Beakfast"/>
+                <ListBoxItem Content="Lunch"/>
+                <ListBoxItem Content="Dinner"/>
+                <ListBoxItem Content="Bedtime"/>
+                <ListBoxItem Content="Average"/>
+            </ListBox>
+            <ListBox x:Name="todayListBox" Loaded="TodayListBox_Loaded"/>
+            <ListBox x:Name="weekListBox" Loaded="WeekListBox_Loaded"/>
+            <ListBox x:Name="twoWeekListBox" Loaded="TwoWeekListBox_Loaded"/>
+            <ListBox x:Name="monthListBox" Loaded="MonthListBox_Loaded"/>
+        </StackPanel>
+        <!--ItemsSource="{Binding}"-->
+
+        <DataGrid 
+            x:Name="dataGrid"
+            Grid.Column="1" Grid.Row="1"
+            DataContext="{StaticResource EntryLogViewSource}"
+            ItemsSource="{Binding UpdateSourceTrigger=PropertyChanged}"
+            
+            AutoGenerateColumns="False"
+            CanUserAddRows="False"
+            CanUserReorderColumns="True"
+            CanUserSortColumns="True"
+            CanUserResizeColumns="True"
+            IsReadOnly="True"
+            ScrollViewer.CanContentScroll="True"
+            ScrollViewer.VerticalScrollBarVisibility="Auto" SelectionChanged="DataGrid_SelectionChanged">
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background"
+                        Value="{Binding RelativeSource={RelativeSource Self},
+                        Path=Item.Glucose, 
+                        Converter={StaticResource converter}}"/>
+                </Style>
+            
+            </DataGrid.RowStyle>
+            
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Date" Binding="{Binding DateStr}" />
+                <DataGridTextColumn Header="Type" Binding="{Binding TypeStr}" />
+                <DataGridTextColumn Header="Time" Binding="{Binding Time}" />
+                <DataGridTextColumn Header="Glucose" Binding="{Binding Glucose}" />
+
+                <DataGridTextColumn Header="Base" Binding="{Binding BaseDose}" />
+                <DataGridTextColumn Header="Adj" Binding="{Binding GlucoseAdj}" />
+                <DataGridTextColumn Header="Fast" Binding="{Binding FastActingDose}" />
+                <DataGridTextColumn Header="Slow" Binding="{Binding SlowActingDose}" />
+                <DataGridTextColumn Header="Carbs" Binding="{Binding CarbGrams}" />
+                <DataGridTextColumn Header="Notes" Binding="{Binding Notes}" />
+
+
+
+            </DataGrid.Columns>
+        </DataGrid>
+        <local:DiaryEntryForm Loaded="DiaryEntryForm_Loaded" 
+            Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" />
+    </Grid>
 </Window>

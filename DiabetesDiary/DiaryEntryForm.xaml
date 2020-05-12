@@ -7,7 +7,20 @@
              mc:Ignorable="d" 
              d:DesignHeight="750" d:DesignWidth="800">
     <UserControl.Resources>
-        <Style TargetType="GroupBox">
+        <Style TargetType="{x:Type Control}" x:Key="baseStyle">
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+        <!--<Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource baseStyle}" />
+        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource baseStyle}" />
+        <Style TargetType="{x:Type UserControl}" BasedOn="{StaticResource baseStyle}" />
+        <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource baseStyle}" />
+        <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource baseStyle}" />
+        <Style TargetType="{x:Type DataGridCell}" BasedOn="{StaticResource baseStyle}" />
+        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource baseStyle}" />
+        <Style TargetType="{x:Type Label}" BasedOn="{StaticResource baseStyle}" />
+        <Style TargetType="{x:Type GroupBox}" BasedOn="{StaticResource baseStyle}" />-->
+
+        <Style TargetType="GroupBox" BasedOn="{StaticResource baseStyle}" >
             <Setter Property="BorderThickness" Value="1" />
             <!--<Setter Property="FontWeight" Value="Black" />-->
             <Setter Property="Background" Value="#f0f0f0"/>
@@ -15,12 +28,12 @@
             <!--<Setter Property="BorderBrush" Value="Pink" />-->
             <!--<Setter Property="CornerRadius" Value="10" />-->
         </Style>
-        <Style TargetType="TextBox">
+        <Style TargetType="TextBox" BasedOn="{StaticResource baseStyle}">
             <Setter Property="HorizontalAlignment" Value="Stretch"/>
             <Setter Property="Grid.Column" Value="1"/>
             <Setter Property="Margin" Value="2"/>
         </Style>
-        <Style TargetType="Label">
+        <Style TargetType="Label" BasedOn="{StaticResource baseStyle}">
             <Setter Property="Margin" Value="0"/>
             <Setter Property="Grid.Column" Value="0"/>
             <!--<Setter Property="Background" Value="LightBlue"/>-->
@@ -58,6 +71,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <!--<GroupBox Header="When" Margin="10" Padding="10">-->
 
@@ -74,31 +89,33 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Label Content="Time and Type" FontSize="10" FontWeight="Bold" Grid.Row="0"  
+                <Label Content="Time and Type" FontSize="15" FontWeight="Bold" Grid.Row="0"  
                        VerticalContentAlignment="Top" VerticalAlignment="Top" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" BorderThickness=".5" BorderBrush="Gray"/>
 
-                <Label Content="Entry Type" Grid.Row="1"/>
-                <ComboBox Grid.Column="1" Grid.Row="1" Margin="2"/>
+                <Label Content="Entry Type" Grid.Row="1" />
+                <ComboBox FontSize="18" Grid.Column="1" Grid.Row="1" Margin="2" 
+                    Name="ComboBoxEntryType" ItemsSource="{Binding}" 
+                          DropDownClosed="ComboBoxEntryType_DropDownClosed"/>
 
                 <Label Content="Date" Grid.Row="2"/>
                 <Label Content="Time" Grid.Row="3"/>
-                <TextBox x:Name="txtDate" Grid.Row="2" />
+                <TextBox x:Name="txtDate" Grid.Row="2" LostKeyboardFocus="txtDate_LostKeyboardFocus" />
                 <TextBox x:Name="txtTime" Grid.Row="3" />
             </Grid>
         </Border>
 
         <Border Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="1">
             <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Label Content="Blood Glucose Reading" FontSize="10" FontWeight="Bold" Grid.Row="0"  
+                <Label Content="Blood Glucose Reading" FontSize="15" FontWeight="Bold" Grid.Row="0"  
                        VerticalContentAlignment="Top" VerticalAlignment="Top" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" BorderThickness=".5" BorderBrush="Gray"/>
                 <Label Content="Glucose Reading" Grid.Row="2"/>
                 <TextBox x:Name="txtGlucose" MinWidth="50"  Grid.Row="2"/>
@@ -121,7 +138,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Label Content="Fast-Acting Insulin (Lantus)" FontSize="10" FontWeight="Bold" Grid.Row="0"  
+                <Label Content="Fast-Acting Insulin (Lantus)" FontSize="15" FontWeight="Bold" Grid.Row="0"  
                        VerticalContentAlignment="Top" VerticalAlignment="Top" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" BorderThickness=".5" BorderBrush="Gray"/>
 
                 <TextBox x:Name="txtBaseDosage" Grid.Column="1" Grid.Row="1" MinWidth="50"/>
@@ -146,7 +163,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Label Content="Slow-Acting Insulin ()" FontSize="10" FontWeight="Bold" Grid.Row="0"  
+                <Label Content="Slow-Acting Insulin ()" FontSize="15" FontWeight="Bold" Grid.Row="0"  
                        VerticalContentAlignment="Top" VerticalAlignment="Top" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" BorderThickness=".5" BorderBrush="Gray"/>
                 <TextBox x:Name="txtSlowDose"  Grid.Row="1"/>
                 <Label Content="Slow-Acting Insulin Dose"  Grid.Row="1"/>
@@ -168,32 +185,45 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Label Content="Meals and Snacks" FontSize="10" FontWeight="Bold" Grid.Row="0"  
+                <Label Content="Meals and Snacks" FontSize="15" FontWeight="Bold" Grid.Row="0"  
                        VerticalContentAlignment="Top" VerticalAlignment="Top" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" BorderThickness=".5" BorderBrush="Gray"/>
 
                 <Label Content="Carbs (in grams)" Grid.Column="0" Grid.Row="1"/>
                 <TextBox x:Name="txtCarbs" Grid.Column="1" Grid.Row="1"/>
 
                 <Label Content="Food Eaten" Grid.Column="0" Grid.Row="2"/>
-                <RichTextBox x:Name="txtFoodEaten" Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="1"/>
+                <RichTextBox x:Name="txtFoodEaten" FontSize="18"
+                             Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2" Grid.RowSpan="1"/>
             </Grid>
         </Border>
 
         <Border Grid.Row="6" Grid.ColumnSpan="2" Grid.RowSpan="1">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="1*"/>
-                        <RowDefinition Height="2*"/>
-                    </Grid.RowDefinitions>
-                <Label Content="Notes" FontSize="10" FontWeight="Bold" Grid.Row="0"  
-                       VerticalContentAlignment="Top" VerticalAlignment="Top" Grid.ColumnSpan="2" HorizontalContentAlignment="Center" BorderThickness=".5" BorderBrush="Gray"/>
-                <RichTextBox x:Name="txtNotes"  Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"/>
-                </Grid>
-            </Border>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="241*" />
+                    <ColumnDefinition Width="148*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+                <Label Content="Notes" FontSize="15" FontWeight="Bold" Grid.Row="0"  
+                       VerticalContentAlignment="Top" VerticalAlignment="Top" Grid.ColumnSpan="3" HorizontalContentAlignment="Center" BorderThickness=".5" BorderBrush="Gray"/>
+                <RichTextBox x:Name="txtNotes" FontSize="18"
+                             Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"/>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="7" Grid.ColumnSpan="2" Grid.RowSpan="1">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" 
+                    Margin="5 10">
+                <Button x:Name="btnCancel" Content="Clear" 
+                    Width="100" Padding="10" Margin="10 5" Click="btnCancel_Click"/>
+                <Button x:Name="btnStop" Content="Save" HorizontalAlignment="Right"
+                    Width="100" Padding="10" Margin="10 5" Click="btnStop_Click"/>
+            </StackPanel>
+        </Border>
     </Grid>
 
 </UserControl>
